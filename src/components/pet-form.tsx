@@ -9,8 +9,10 @@ import { usePetContext } from "@/lib/hooks";
 
 export default function PetForm({
   actionType,
+  onFormSubmission,
 }: {
   actionType: "add" | "edit";
+  onFormSubmission: () => void;
 }) {
   const { handleAddPet } = usePetContext();
 
@@ -27,6 +29,7 @@ export default function PetForm({
       notes: formData.get("notes") as string,
     };
     handleAddPet(newPet);
+    onFormSubmission();
   };
   return (
     <form onSubmit={handleSubmit} className="flex flex-col">
