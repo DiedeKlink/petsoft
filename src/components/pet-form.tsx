@@ -10,33 +10,11 @@ import { addPet } from "@/actions/actions";
 
 export default function PetForm({
   actionType,
-  onFormSubmission,
 }: {
   actionType: "add" | "edit";
-  onFormSubmission: () => void;
 }) {
-  const { handleAddPet, selectedPet, handleEditPet } = usePetContext();
+  const { selectedPet } = usePetContext();
 
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.currentTarget);
-  //   const pet = {
-  //     name: formData.get("name") as string,
-  //     ownerName: formData.get("ownerName") as string,
-  //     imageUrl:
-  //       (formData.get("imageUrl") as string) ||
-  //       "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
-  //     age: +(formData.get("age") as string),
-  //     notes: formData.get("notes") as string,
-  //   };
-
-  //   if (actionType === "edit") {
-  //     handleEditPet(selectedPet!.id as string, pet);
-  //   } else if (actionType === "add") {
-  //     handleAddPet(pet);
-  //   }
-  //   onFormSubmission();
-  // };
   return (
     <form action={addPet} className="flex flex-col">
       <div className="space-y-3">
