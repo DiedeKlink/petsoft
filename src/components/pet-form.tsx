@@ -10,13 +10,21 @@ import { addPet } from "@/actions/actions";
 
 export default function PetForm({
   actionType,
+  onFormSubmission,
 }: {
   actionType: "add" | "edit";
+  onFormSubmission: () => void;
 }) {
   const { selectedPet } = usePetContext();
 
   return (
-    <form action={addPet} className="flex flex-col">
+    <form
+      action={async (formData) => {
+        await addPet(formData);
+        onFormSubmission();
+      }}
+      className="flex flex-col"
+    >
       <div className="space-y-3">
         <div className="space-y-1">
           <Label htmlFor="name">Name</Label>
