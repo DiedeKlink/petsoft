@@ -35,7 +35,7 @@ export default function PetContextProvider({
   //state
   const [optimisticPets, setOptimisticPets] = useOptimistic(
     data,
-    (state, newPet) => {
+    (state, newPet: Omit<Pet, "id">) => {
       return [
         ...state,
         {
