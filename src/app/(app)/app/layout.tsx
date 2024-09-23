@@ -11,7 +11,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const pets = await prisma.pet.findMany({});
+  const data = await prisma.pet.findMany({});
   return (
     <>
       <BackgroundPattern />
@@ -19,7 +19,7 @@ export default async function Layout({
         <AppHeader />
 
         <SearchContextProvider>
-          <PetContextProvider data={pets}>{children}</PetContextProvider>
+          <PetContextProvider data={data}>{children}</PetContextProvider>
         </SearchContextProvider>
 
         <AppFooter />
