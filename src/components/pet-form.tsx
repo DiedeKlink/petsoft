@@ -15,27 +15,38 @@ type PetFormProps = {
   onFormSubmission: () => void;
 };
 
-const petFormSchema = z.object({
-  name: z.string().trim().min(3, "Name must be at least 3 characters").max(50),
-  ownerName: z
-    .string()
-    .trim()
-    .min(3, "Owner name must be at least 3 characters")
-    .max(50),
-  imageUrl: z.union([
-    z.literal(""),
-    z.string().url({ message: "Invalid URL" }),
-  ]),
-  age: z.coerce
-    .number()
-    .int()
-    .positive("Age must be a positive number")
-    .max(99, "Age must be less than 99"),
-  notes: z.union([
-    z.literal(""),
-    z.string().trim().max(1000, "Notes must be less than 1000 characters"),
-  ]),
-});
+const petFormSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(3, "Name must be at least 3 characters")
+      .max(50),
+    ownerName: z
+      .string()
+      .trim()
+      .min(3, "Owner name must be at least 3 characters")
+      .max(50),
+    imageUrl: z.union([
+      z.literal(""),
+      z.string().url({ message: "Invalid URL" }),
+    ]),
+    age: z.coerce
+      .number()
+      .int()
+      .positive("Age must be a positive number")
+      .max(99, "Age must be less than 99"),
+    notes: z.union([
+      z.literal(""),
+      z.string().trim().max(1000, "Notes must be less than 1000 characters"),
+    ]),
+  })
+  .transform((data) => ({
+    ...data,
+    imageUrl:
+      data.imageUrl ||
+      "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
+  }));
 
 type TPetForm = z.infer<typeof petFormSchema>;
 
@@ -48,6 +59,7 @@ export default function PetForm({
   const {
     register,
     trigger,
+    getValues,
     formState: { errors },
   } = useForm<TPetForm>({
     resolver: zodResolver(petFormSchema),
@@ -59,16 +71,8 @@ export default function PetForm({
         const result = await trigger();
         if (!result) return;
         onFormSubmission();
-        const petData = {
-          name: formData.get("name") as string,
-          ownerName: formData.get("ownerName") as string,
-          imageUrl:
-            (formData.get("imageUrl") as string) ||
-            "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
-          age: Number(formData.get("age")),
-          notes: formData.get("notes") as string,
-        };
 
+        const petData = getValues();
         if (actionType === "add") {
           await handleAddPet(petData);
         } else if (actionType === "edit") {
