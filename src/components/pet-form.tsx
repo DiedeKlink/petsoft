@@ -9,6 +9,7 @@ import PetFormBtn from "./pet-form-btn";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DEFAULT_PET_IMAGE } from "@/lib/constants";
 
 type PetFormProps = {
   actionType: "add" | "edit";
@@ -43,9 +44,7 @@ const petFormSchema = z
   })
   .transform((data) => ({
     ...data,
-    imageUrl:
-      data.imageUrl ||
-      "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
+    imageUrl: data.imageUrl || DEFAULT_PET_IMAGE,
   }));
 
 type TPetForm = z.infer<typeof petFormSchema>;
@@ -73,6 +72,8 @@ export default function PetForm({
         onFormSubmission();
 
         const petData = getValues();
+        petData.imageUrl = petData.imageUrl || DEFAULT_PET_IMAGE;
+
         if (actionType === "add") {
           await handleAddPet(petData);
         } else if (actionType === "edit") {
