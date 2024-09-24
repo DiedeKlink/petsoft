@@ -37,13 +37,19 @@ const config = {
     }),
   ],
   callbacks: {
-    authorized: ({ request }) => {
+    authorized: ({ auth, request }) => {
       //runs on every quest with middleware
+      const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccesApp = request.nextUrl.pathname.includes("/app");
 
-      if (isTryingToAccesApp) {
+      if (!isLoggedIn && isTryingToAccesApp) {
         return false;
-      } else {
+      }
+
+      if (isLoggedIn && isTryingToAccesApp) {
+        return true;
+      }
+      if (!isTryingToAccesApp) {
         return true;
       }
     },
