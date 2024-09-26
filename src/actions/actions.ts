@@ -33,17 +33,13 @@ export async function logIn(prevState: unknown, formData: unknown) {
           };
         default:
           return {
-            message: "Failed to sign in",
+            message: "Error. Failed to sign in",
           };
       }
     }
 
-    return {
-      message: "Failed to sign in",
-    };
+    throw error; // nextjs redirects throws error, se we need to rethrow it
   }
-
-  redirect("/app/dashboard");
 }
 
 export async function logOut() {
