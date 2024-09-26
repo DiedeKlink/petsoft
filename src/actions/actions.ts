@@ -7,12 +7,13 @@ import { sleep } from "@/lib/utils";
 import { authSchema, petFormSchema, petIdSchema } from "@/lib/validations";
 import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 // ----user actions----
 
-export async function logIn(formData: unknown) {
+export async function logIn(prevState: unknown, formData: unknown) {
   await sleep(1000);
 
   if (!(formData instanceof FormData)) {
@@ -21,7 +22,26 @@ export async function logIn(formData: unknown) {
     };
   }
 
-  await signIn("credentials", formData);
+  try {
+    await signIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return {
+            message: "Invalid credentials",
+          };
+        default:
+          return {
+            message: "Failed to sign in",
+          };
+      }
+    }
+
+    return {
+      message: "Failed to sign in",
+    };
+  }
 
   redirect("/app/dashboard");
 }
