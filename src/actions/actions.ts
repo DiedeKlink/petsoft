@@ -13,6 +13,8 @@ import { redirect } from "next/navigation";
 // ----user actions----
 
 export async function logIn(formData: unknown) {
+  await sleep(1000);
+
   if (!(formData instanceof FormData)) {
     return {
       message: "Invalid form data",
@@ -28,7 +30,8 @@ export async function logOut() {
   await signOut({ redirectTo: "/" });
 }
 
-export async function signUp(formData: unknown) {
+export async function signUp(prevState: unknown, formData: unknown) {
+  await sleep(1000);
   // check if formData is a FormData type
   if (!(formData instanceof FormData)) {
     return {
@@ -61,12 +64,12 @@ export async function signUp(formData: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return {
-          message: "Email already in use",
+          message: "Email already in use.",
         };
       }
     }
     return {
-      message: "Failed to sign up",
+      message: "Failed to sign up.",
     };
   }
 
