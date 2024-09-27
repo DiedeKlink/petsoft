@@ -1,8 +1,10 @@
 "use client";
 
 import { createCheckoutSession } from "@/actions/actions";
+import ContentBlock from "@/components/content-block";
 import H1 from "@/components/h1";
 import { Button } from "@/components/ui/button";
+import { LightningBoltIcon } from "@radix-ui/react-icons";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -33,16 +35,31 @@ export default function Page({
       )}
 
       {!searchParams.success && (
-        <Button
-          disabled={isPending}
-          onClick={async () => {
-            startTransition(async () => {
-              await createCheckoutSession();
-            });
-          }}
-        >
-          Buy lifetime acces for $299
-        </Button>
+        <>
+          <Button
+            disabled={isPending}
+            onClick={async () => {
+              startTransition(async () => {
+                await createCheckoutSession();
+              });
+            }}
+          >
+            Buy lifetime acces for $299
+          </Button>
+
+          <ContentBlock className="p-4">
+            <h2 className="text-lg">
+              <LightningBoltIcon className="w-6 h-6 inline-block" /> For testing
+              purposes, you can use the following card details:
+            </h2>
+            <ul className="ml-[30px]">
+              <li>Card number: 4242 4242 4242 4242</li>
+              <li>Expiry date: 04/44</li>
+              <li>CVC: 444</li>
+              <li>Full Name: 4</li>
+            </ul>
+          </ContentBlock>
+        </>
       )}
 
       {searchParams.success && (
