@@ -48,6 +48,13 @@ const config = {
       const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccesApp = request.nextUrl.pathname.includes("/app");
 
+      console.log(
+        isLoggedIn,
+        isTryingToAccesApp,
+        auth?.user.hasAccess,
+        request.nextUrl.pathname
+      );
+
       if (!isLoggedIn && isTryingToAccesApp) {
         return false;
       }
@@ -59,11 +66,19 @@ const config = {
       if (isLoggedIn && isTryingToAccesApp && auth?.user.hasAccess) {
         return true;
       }
-      if (isLoggedIn && !isTryingToAccesApp) {
+
+      if (
+        isLoggedIn &&
+        (request.nextUrl.pathname.includes("/login") ||
+          request.nextUrl.pathname.includes("/signup")) &&
+        auth?.user.hasAccess
+      ) {
+        return Response.redirect(new URL("/app/dashboard", request.nextUrl));
+      }
+      if (isLoggedIn && !isTryingToAccesApp && !auth?.user.hasAccess) {
         if (
-          (request.nextUrl.pathname.includes("/login") ||
-            request.nextUrl.pathname.includes("/signup")) &&
-          !auth?.user.hasAccess
+          request.nextUrl.pathname.includes("/login") ||
+          request.nextUrl.pathname.includes("/signup")
         ) {
           return Response.redirect(new URL("/payment", request.nextUrl));
         }
